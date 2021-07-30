@@ -1,5 +1,8 @@
 # should have mouthDetect
 import math
+import face_recognition
+import cv2
+
 class MouthDetector():
     def get_lip_height(self, lip):
         sum = 0
@@ -26,6 +29,24 @@ class MouthDetector():
 
         # if mouth is open more than lip height * ratio, return true.
         ratio = 0.5
+        if mouth_height > min(top_lip_height, bottom_lip_height) * ratio:
+            return True
+        else:
+            return False
+
+    def is_mouth_open(self, face_landmarks):
+        top_lip = face_landmarks['top_lip']
+        bottom_lip = face_landmarks['bottom_lip']
+
+        top_lip_height = self.get_lip_height(top_lip)
+        bottom_lip_height = self.get_lip_height(bottom_lip)
+        mouth_height = self.get_mouth_height(top_lip, bottom_lip)
+
+        # if mouth is open more than lip height * ratio, return true.
+        ratio = 0.5
+        print('top_lip_height: %.2f, bottom_lip_height: %.2f, mouth_height: %.2f, min*ratio: %.2f'
+              % (top_lip_height, bottom_lip_height, mouth_height, min(top_lip_height, bottom_lip_height) * ratio))
+
         if mouth_height > min(top_lip_height, bottom_lip_height) * ratio:
             return True
         else:

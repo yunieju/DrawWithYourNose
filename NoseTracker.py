@@ -4,7 +4,8 @@ import numpy as np
 
 class NoseDetector():
     #make it return the min, max of the x, y of nose box
-    def findNose(self, img, nose_cascade):
+    def findNose(self, img):
+        nose_cascade = cv2.CascadeClassifier('./haarcascade_mcs_nose.xml')
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         nose_rects = nose_cascade.detectMultiScale(gray, 1.3, 5)
         for (x, y, w, h) in nose_rects:
@@ -13,14 +14,17 @@ class NoseDetector():
             break
         return img
 
-    def findNosePosition(self, img, nose_cascade):
+    def findNosePosition(self, img):
+        nose_cascade = cv2.CascadeClassifier('./haarcascade_mcs_nose.xml')
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         nose_rects = nose_cascade.detectMultiScale(gray, 1.3, 5)
+
         for (x, y, w, h) in nose_rects:
             print(x, y, w, h)
-            cv2.rectangle(img, (x + w // 2, y + h // 2), (x + w // 2, y + h//2), (0, 255, 0), 3)
-            break
-        return img
+            cv2.rectangle(img, (x + w // 2, y + h // 2), (x + w // 2, y + h // 2), (0, 255, 0), 15)
+            return img, [x + w // 2, y + h // 2]
+
+        return img, [0,0]
 
 def main():
     nose_cascade = cv2.CascadeClassifier('./haarcascade_mcs_nose.xml')
